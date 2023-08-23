@@ -1,3 +1,4 @@
+const expressAsyncHandler = require("express-async-handler");
 const Admin = require("../../model/Staff/Admin");
 const asyncHandler = require("express-async-handler");
 
@@ -34,19 +35,28 @@ exports.registerAdmCtrl = asyncHandler(async (req, res) => {
 //@desc     login admins
 //@route    POST /api/v1/admins/login
 //@access   Private
-exports.loginAdminCtrl = (req, res) => {
+exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
+  const { password, email } = req.body;
   try {
-    res.status(201).json({
-      status: "success",
-      data: "Admin has been login",
-    });
+    // find user
+    const user = await Admin.findOne({ email });
+    if (!user) {
+      return res.json({ message: "Invalid Login Credentials" });
+    }
+
+    // Use the correct method name 'verifyPassword'
+    if (user && (await user.verifyPassword(password))) {
+      return res.json({ data: user });
+    } else {
+      return res.json({ message: "Invalid Login Credentials" });
+    }
   } catch (error) {
     res.json({
       status: "failed",
       error: error.message,
     });
   }
-};
+});
 
 //@desc     Get all admins
 //@route    GET /api/v1/admins
