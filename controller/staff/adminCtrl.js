@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const Admin = require("../../model/Staff/Admin");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../../utils/generateToken");
+const verifyToken = require("../../utils/verifyToken");
 
 //@desc Register admin
 //@route POST /api/admins/register
@@ -38,9 +39,15 @@ exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
   }
   // Use the correct method name 'verifyPassword'
   if (user && (await user.verifyPassword(password))) {
-    // save the user into req object
-    req.userAuth = user;
-    return res.json({ data: generateToken(user._id) });
+    return res.json({
+      data: {
+        _id: user?._id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        token: generateToken(user?._id),
+      },
+    });
   } else {
     return res.json({ message: "Invalid Login Credentials" });
   }
