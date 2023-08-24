@@ -6,11 +6,17 @@ const globalErrHandler = (err, req, res, next) => {
   const message = err.message;
   const status = err.status ? err.status : "failed";
   const statusCode = err.statusCode ? err.statusCode : 500;
-  res.status.json({
+  res.status(statusCode).json({
     status,
     message,
     stack,
   });
 };
 
-module.exports = globalErrHandler;
+//Not found
+const notFound = (req, res, next) => {
+  const err = new Error(`Can't find ${req.originalUrl} on the server`);
+  next(err);
+};
+
+module.exports = { globalErrHandler, notFound };
