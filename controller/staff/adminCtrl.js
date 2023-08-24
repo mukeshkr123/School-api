@@ -7,29 +7,22 @@ const asyncHandler = require("express-async-handler");
 //@acess  Private
 exports.registerAdmCtrl = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  try {
-    // Check if email exists
-    const adminFound = await Admin.findOne({ email });
-    if (adminFound) {
-      return res.json("Admin exists");
-    }
-    // Register
-    const user = await Admin.create({
-      name,
-      email,
-      password,
-    });
-    // Successful registration
-    res.status(201).json({
-      status: "success",
-      data: user,
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
-    });
+  // Check if email exists
+  const adminFound = await Admin.findOne({ email });
+  if (adminFound) {
+    return res.json("Admin exists");
   }
+  // Register
+  const user = await Admin.create({
+    name,
+    email,
+    password,
+  });
+  // Successful registration
+  res.status(201).json({
+    status: "success",
+    data: user,
+  });
 });
 
 //@desc     login admins
@@ -80,11 +73,13 @@ exports.getAdminsCtrl = expressAsyncHandler(async (req, res) => {
 //@route    GET /api/v1/admins/:id
 //@access   Private
 
-exports.getAdminCtrl = (req, res) => {
+exports.getAdminCtrl = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
   try {
+    const user = await Admin.findById({ id });
     res.status(201).json({
       status: "success",
-      data: "single admin",
+      data: user,
     });
   } catch (error) {
     res.json({
@@ -92,7 +87,7 @@ exports.getAdminCtrl = (req, res) => {
       error: error.message,
     });
   }
-};
+});
 //@desc    update admin
 //@route    UPDATE /api/v1/admins/:id
 //@access   Private
