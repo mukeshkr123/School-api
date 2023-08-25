@@ -88,19 +88,34 @@ exports.getAdminProfileCtrl = expressAsyncHandler(async (req, res) => {
 //@desc    update admin
 //@route    UPDATE /api/v1/admins/:id
 //@access   Private
-exports.updateAdminCtrl = (req, res) => {
-  try {
-    res.status(201).json({
+exports.updateAdminCtrl = asyncHandler(async (req, res) => {
+  const { email, name, password } = req.body;
+  // find the admin
+  // if email is taken
+  const emailExist = await Admin.findOne({ email });
+  if (emailExist) {
+    throw new Error("This is taken/exist");
+  } else {
+    //update
+    const admin = await Admin.findByIdAndUpdate(
+      req.userAuth._id,
+      {
+        email,
+        password,
+        name,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(200).json({
       status: "success",
-      data: "update admin",
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
+      data: admin,
+      message: "Admin updated Successfully",
     });
   }
-};
+});
 
 //@desc     Delete admin
 //@route    DELETE /api/v1/admins/:id
