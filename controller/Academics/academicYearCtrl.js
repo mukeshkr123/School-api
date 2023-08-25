@@ -28,11 +28,23 @@ exports.createAcademicYear = expressAsyncHandler(async (req, res) => {
 //@desc     Fetch Academic years
 //@route    GET /api/v1/academic-years
 //@access   Private
-exports.getAllAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
+exports.getAllAcademicYearsCtrl = expressAsyncHandler(async (req, res) => {
   const academicYears = await AcademicYear.find();
   res.status(200).json({
     status: "success",
     message: "Fetched all academic year successfully",
+    data: academicYears,
+  });
+});
+
+//@desc     Fetch single  Academic year
+//@route    GET /api/v1/academic-years/:id
+//@access   Private
+exports.getAllAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
+  const academicYears = await AcademicYear.findById(req.params.id);
+  res.status(200).json({
+    status: "success",
+    message: "Fetched Single academic year successfully",
     data: academicYears,
   });
 });
