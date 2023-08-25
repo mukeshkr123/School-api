@@ -73,3 +73,14 @@ exports.updateAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
     data: updateAcademicYears,
   });
 });
+
+//@desc     delete Academic year
+//@route    DELETE /api/v1/academic-years/:id
+//@access   Private
+exports.deleteAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
+  await AcademicYear.findByIdAndDelete(req.body.id);
+  res.status(201).json({
+    status: "success",
+    message: "Academic year deleted  successfully",
+  });
+});
