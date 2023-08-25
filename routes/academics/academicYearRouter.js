@@ -2,7 +2,8 @@ const express = require("express");
 const {
   createAcademicYear,
   getAllAcademicYearsCtrl,
-  getAllAcademicYearCtrl,
+  getAcademicYearCtrl,
+  updateAcademicYearCtrl,
 } = require("../../controller/Academics/academicYearCtrl");
 const isLogin = require("../../middlewares/isLoggedin");
 const isAdmin = require("../../middlewares/isAdmin");
@@ -15,6 +16,9 @@ academicYearRouter.post("/", isLogin, isAdmin, createAcademicYear);
 academicYearRouter.get("/", isLogin, isAdmin, getAllAcademicYearsCtrl);
 
 //get single academic year
-academicYearRouter.get("/:id", isLogin, isAdmin, getAllAcademicYearCtrl);
+academicYearRouter.get("/:id", isLogin, isAdmin, getAcademicYearCtrl);
+
+// update academic  year
+academicYearRouter.put("/:id", isLogin, isAdmin, updateAcademicYearCtrl);
 
 module.exports = academicYearRouter;

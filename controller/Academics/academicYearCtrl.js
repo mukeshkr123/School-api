@@ -40,11 +40,36 @@ exports.getAllAcademicYearsCtrl = expressAsyncHandler(async (req, res) => {
 //@desc     Fetch single  Academic year
 //@route    GET /api/v1/academic-years/:id
 //@access   Private
-exports.getAllAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
+exports.getAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
   const academicYears = await AcademicYear.findById(req.params.id);
   res.status(200).json({
     status: "success",
     message: "Fetched Single academic year successfully",
     data: academicYears,
+  });
+});
+
+//@desc     update Academic year
+//@route    PUT /api/v1/academic-years/:id
+//@access   Private
+exports.updateAcademicYearCtrl = expressAsyncHandler(async (req, res) => {
+  const { name, fromYear, toYear } = req.body;
+  // check if name exist
+  const academicYearFind = await AcademicYear.findOne({ name });
+  if (academicYearFind) {
+    throw new Error("Academic year already exists");
+  }
+  const updateAcademicYears = await AcademicYear.findByIdAndUpdate(
+    req.params.id,
+    {
+      name,
+      fromYear,
+      toYear,
+    }
+  );
+  res.status(200).json({
+    status: "success",
+    message: "updated academic year successfully",
+    data: updateAcademicYears,
   });
 });
