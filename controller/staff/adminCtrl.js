@@ -75,21 +75,20 @@ exports.getAdminsCtrl = expressAsyncHandler(async (req, res) => {
 //@route    GET /api/v1/admins/:id
 //@access   Private
 
-exports.getAdminCtrl = expressAsyncHandler(async (req, res) => {
-  const { id } = req.params;
-  try {
-    const user = await Admin.findById({ id });
-    res.status(201).json({
+exports.getAdminProfileCtrl = expressAsyncHandler(async (req, res) => {
+  const admin = await Admin.findById(req.userAuth._id).select(
+    "-password -createdAt -updatedAt "
+  );
+  if (!admin) {
+    throw new Error("Admin not found");
+  } else {
+    res.status(200).json({
       status: "success",
-      data: user,
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
+      data: admin,
     });
   }
 });
+
 //@desc    update admin
 //@route    UPDATE /api/v1/admins/:id
 //@access   Private
