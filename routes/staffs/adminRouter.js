@@ -28,7 +28,6 @@ adminRouter.post("/login", loginAdminCtrl);
 adminRouter.get("/", isLogin, getAdminsCtrl);
 
 //single
-
 adminRouter.get("/profile", isLogin, getAdminProfileCtrl);
 
 //update
