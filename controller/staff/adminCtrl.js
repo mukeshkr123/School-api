@@ -24,6 +24,7 @@ exports.registerAdmCtrl = asyncHandler(async (req, res) => {
   res.status(201).json({
     status: "success",
     data: user,
+    message: "Admin Registered Successfully",
   });
 });
 
@@ -47,6 +48,7 @@ exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
         role: user?.role,
         token: generateToken(user?._id),
       },
+      message: "Amin logged in successfully",
     });
   } else {
     return res.json({ message: "Invalid Login Credentials" });
@@ -62,6 +64,7 @@ exports.getAdminsCtrl = expressAsyncHandler(async (req, res) => {
     res.status(201).json({
       status: "success",
       data: user,
+      message: "Admin Profile fetched successfully",
     });
   } catch (error) {
     res.json({
