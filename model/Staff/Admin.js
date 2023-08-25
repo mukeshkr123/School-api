@@ -46,7 +46,7 @@ const adminSchema = new mongoose.Schema(
     studens: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Students",
+        ref: "Student",
       },
     ],
   },
@@ -55,22 +55,6 @@ const adminSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-// Hashing the password before saving
-adminSchema.pre("save", async function hashPassword(next) {
-  try {
-    if (!this.isModified("password")) {
-      return next();
-    }
-    // Generate a salt
-    const salt = await bcrypt.genSalt(10);
-    // Hash the password
-    this.password = await bcrypt.hash(this.password, salt);
-    return next();
-  } catch (error) {
-    return next(error);
-  }
-});
 
 // verify password
 adminSchema.methods.verifyPassword = async function (enteredPassword) {

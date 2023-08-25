@@ -3,6 +3,7 @@ const Admin = require("../../model/Staff/Admin");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../../utils/generateToken");
 const verifyToken = require("../../utils/verifyToken");
+const bcrypt = require("bcryptjs");
 
 //@desc Register admin
 //@route POST /api/admins/register
@@ -14,11 +15,16 @@ exports.registerAdmCtrl = asyncHandler(async (req, res) => {
   if (adminFound) {
     return res.json("Admin exists");
   }
+  //hash the password
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password
+  const passwordHashed = await bcrypt.hash(password, salt);
   // Register
   const user = await Admin.create({
     name,
     email,
-    password,
+    password: passwordHashed,
   });
   // Successful registration
   res.status(201).json({
@@ -38,7 +44,11 @@ exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
   if (!user) {
     return res.json({ message: "Invalid Login Credentials" });
   }
-  if (user && (await user.verifyPassword(password))) {
+  // verify password
+  const isMatched = await bcrypt.compare(password, user.password);
+  if (!isMatched) {
+    return res.json({ message: "Invalid Login Credentials" });
+  } else {
     return res.status(201).json({
       status: "success",
       data: {
@@ -48,10 +58,8 @@ exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
         role: user?.role,
         token: generateToken(user?._id),
       },
-      message: "Amin logged in successfully",
+      message: "Admin logged in successfully",
     });
-  } else {
-    return res.json({ message: "Invalid Login Credentials" });
   }
 });
 
@@ -93,6 +101,10 @@ exports.updateAdminCtrl = asyncHandler(async (req, res) => {
   // find the admin
   // if email is taken
   const emailExist = await Admin.findOne({ email });
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password
+  const passwordHashed = await bcrypt.hash(password, salt);
   if (emailExist) {
     throw new Error("This is taken/exist");
   } else {
@@ -101,7 +113,7 @@ exports.updateAdminCtrl = asyncHandler(async (req, res) => {
       req.userAuth._id,
       {
         email,
-        password,
+        password: passwordHashed,
         name,
       },
       {
