@@ -37,9 +37,9 @@ exports.loginAdminCtrl = expressAsyncHandler(async (req, res) => {
   if (!user) {
     return res.json({ message: "Invalid Login Credentials" });
   }
-  // Use the correct method name 'verifyPassword'
   if (user && (await user.verifyPassword(password))) {
-    return res.json({
+    return res.status(201).json({
+      status: "success",
       data: {
         _id: user?._id,
         name: user?.name,
