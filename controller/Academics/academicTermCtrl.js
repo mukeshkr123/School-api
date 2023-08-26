@@ -47,6 +47,7 @@ exports.getAllAcademicTermsCtrl = expressAsyncHandler(async (req, res) => {
 //@access   Private
 exports.getAcademicTermCtrl = expressAsyncHandler(async (req, res) => {
   const academicTerm = await AcademicTerm.findById(req.params.id);
+  console.log(req.params.id);
   res.status(200).json({
     status: "success",
     message: "Fetched Single academic Term successfully",

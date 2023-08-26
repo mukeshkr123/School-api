@@ -21,6 +21,12 @@ academicTermRouter
   .post(isLogin, isAdmin, createAcademicTerm)
   .get(isLogin, isAdmin, getAllAcademicTermsCtrl);
 
+academicTermRouter
+  .route("/:id")
+  .get(isLogin, isAdmin, getAcademicTermCtrl)
+  .put(isLogin, isAdmin, updateAcademicTermCtrl)
+  .delete(isLogin, isAdmin, deleteAcademicTermCtrl);
+
 // //get single academic Term
 // academicTermRouter.get("/:id", isLogin, isAdmin, getAcademicTermCtrl);
 
@@ -29,11 +35,5 @@ academicTermRouter
 
 // //delete academic Term
 // academicTermRouter.delete("/:id", isLogin, isAdmin, deleteAcademicTermCtrl);
-
-academicTermRouter
-  .route("/:id")
-  .get(isLogin, isAdmin, getAcademicTermCtrl)
-  .put(isLogin, isAdmin, updateAcademicTermCtrl)
-  .delete(isLogin, isAdmin, deleteAcademicTermCtrl);
 
 module.exports = academicTermRouter;
