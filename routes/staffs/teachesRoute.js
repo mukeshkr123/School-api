@@ -3,6 +3,7 @@ const {
   adminRegisterTeacher,
   loginTeacher,
   getAllTechersAdmin,
+  getTecherByAdmin,
 } = require("../../controller/staff/teacherCtrl");
 
 const isAdmin = require("../../middlewares/isAdmin");
@@ -18,5 +19,11 @@ teachersRouter.post(
 );
 teachersRouter.post("/login", loginTeacher);
 teachersRouter.get("/admin", isAdminLogin, isAdmin, getAllTechersAdmin);
+teachersRouter.get(
+  "/:teacherID/admin",
+  isAdminLogin,
+  isAdmin,
+  getTecherByAdmin
+);
 
 module.exports = teachersRouter;
