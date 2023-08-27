@@ -53,3 +53,16 @@ exports.loginTeacher = AysncHandler(async (req, res) => {
     });
   }
 });
+
+//@desc  Admin get Teacher
+//@route POST /api/admins/teachers
+//@acess  Private // admin only
+
+exports.getAllTechersAdmin = AysncHandler(async (req, res) => {
+  const teachers = await Teacher.find();
+  res.status(200).json({
+    status: "status",
+    message: "Teachers Fetched successfully",
+    data: teachers,
+  });
+});
