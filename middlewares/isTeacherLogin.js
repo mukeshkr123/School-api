@@ -1,15 +1,15 @@
-const Admin = require("../model/Staff/Admin");
+const Teacher = require("../model/Academic/Teacher");
 const verifyToken = require("../utils/verifyToken");
 
-const isLogin = async (req, res, next) => {
+const isTeacherLogin = async (req, res, next) => {
   //get token from header
   const headerObj = req.headers;
   const token = headerObj?.authorization?.split(" ")[1];
   //verify token
   const verifiedToken = verifyToken(token);
   if (verifiedToken) {
-    //find the admin
-    const user = await Admin.findById(verifiedToken.id).select(
+    //find the Teacher
+    const user = await Teacher.findById(verifiedToken.id).select(
       "name email role"
     );
     //save the user into req.obj
@@ -21,4 +21,4 @@ const isLogin = async (req, res, next) => {
   }
 };
 
-module.exports = isLogin;
+module.exports = isTeacherLogin;

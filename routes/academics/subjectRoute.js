@@ -1,7 +1,7 @@
 const express = require("express");
 
-const isLogin = require("../../middlewares/isLoggedin");
 const isAdmin = require("../../middlewares/isAdmin");
+
 const {
   createSubject,
   getSubjectsCtrl,
@@ -9,16 +9,17 @@ const {
   updateSubjectCtrl,
   deleteSubjectCtrl,
 } = require("../../controller/Academics/subjectCtrl");
+const isAdminLogin = require("../../middlewares/isAdminLoggedin");
 const subjectRouter = express.Router();
 
-subjectRouter.post("/:programID", isLogin, isAdmin, createSubject);
+subjectRouter.post("/:programID", isAdminLogin, isAdmin, createSubject);
 
-subjectRouter.get("/", isLogin, isAdmin, getSubjectsCtrl);
+subjectRouter.get("/", isAdminLogin, isAdmin, getSubjectsCtrl);
 
 subjectRouter
   .route("/:id")
-  .get(isLogin, isAdmin, getSubjectCtrl)
-  .put(isLogin, isAdmin, updateSubjectCtrl)
-  .delete(isLogin, isAdmin, deleteSubjectCtrl);
+  .get(isAdminLogin, isAdmin, getSubjectCtrl)
+  .put(isAdminLogin, isAdmin, updateSubjectCtrl)
+  .delete(isAdminLogin, isAdmin, deleteSubjectCtrl);
 
 module.exports = subjectRouter;

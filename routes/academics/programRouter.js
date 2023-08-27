@@ -7,17 +7,17 @@ const {
   deleteProgramCtrl,
 } = require("../../controller/Academics/programCtrl");
 createProgram;
-const isLogin = require("../../middlewares/isLoggedin");
 const isAdmin = require("../../middlewares/isAdmin");
+const isAdminLogin = require("../../middlewares/isAdminLoggedin");
 const ProgramRouter = express.Router();
 
 ProgramRouter.route("/")
-  .post(isLogin, isAdmin, createProgram)
-  .get(isLogin, isAdmin, getAllProgramsCtrl);
+  .post(isAdminLogin, isAdmin, createProgram)
+  .get(isAdminLogin, isAdmin, getAllProgramsCtrl);
 
 ProgramRouter.route("/:id")
-  .get(isLogin, isAdmin, getProgramCtrl)
-  .put(isLogin, isAdmin, updateProgramCtrl)
-  .delete(isLogin, isAdmin, deleteProgramCtrl);
+  .get(isAdminLogin, isAdmin, getProgramCtrl)
+  .put(isAdminLogin, isAdmin, updateProgramCtrl)
+  .delete(isAdminLogin, isAdmin, deleteProgramCtrl);
 
 module.exports = ProgramRouter;

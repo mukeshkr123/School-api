@@ -6,20 +6,20 @@ const {
   getYearGroups,
   updateYearGroup,
 } = require("../../controller/Academics/yearGroupCtrl");
-const isLogin = require("../../middlewares/isLoggedin");
 const isAdmin = require("../../middlewares/isAdmin");
+const isAdminLogin = require("../../middlewares/isAdminLoggedin");
 
 const yearGroupRouter = express.Router();
 
 yearGroupRouter
   .route("/")
-  .post(isLogin, isAdmin, createYearGroup)
-  .get(isLogin, isAdmin, getYearGroups);
+  .post(isAdminLogin, isAdmin, createYearGroup)
+  .get(isAdminLogin, isAdmin, getYearGroups);
 
 yearGroupRouter
   .route("/:id")
-  .get(isLogin, isAdmin, getYearGroup)
-  .put(isLogin, isAdmin, updateYearGroup)
-  .delete(isLogin, isAdmin, deleteYearGroup);
+  .get(isAdminLogin, isAdmin, getYearGroup)
+  .put(isAdminLogin, isAdmin, updateYearGroup)
+  .delete(isAdminLogin, isAdmin, deleteYearGroup);
 
 module.exports = yearGroupRouter;
