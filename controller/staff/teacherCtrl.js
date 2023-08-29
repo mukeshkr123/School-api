@@ -2,6 +2,7 @@ const AysncHandler = require("express-async-handler");
 const Teacher = require("../../model/Academic/Teacher");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
+const bcrypt = require("bcryptjs");
 
 //@desc  Admin Register Teacher
 //@route POST /api/teachers/admin/register
@@ -101,4 +102,41 @@ exports.getTeacherProfile = AysncHandler(async (req, res) => {
     message: "Teachers Fetched successfully",
     data: teacher,
   });
+});
+
+//@desc  Admin get Teacher
+//@route POST /api/teachers/:/teacherIDupdate
+//@acess  Private // admin only
+
+exports.teacherUpdateProfike = AysncHandler(async (req, res) => {
+  const { email, name, password } = req.body;
+  // find the teacher
+  // if email is taken
+  const emailExist = await Teacher.findOne({ email });
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password
+  const passwordHashed = await bcrypt.hash(password, salt);
+  if (emailExist) {
+    throw new Error("This is taken/exist");
+  } else {
+    //update
+    const teacher = await Teacher.findByIdAndUpdate(
+      req.userAuth._id,
+      {
+        email,
+        password: passwordHashed,
+        name,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(200).json({
+      status: "success",
+      data: teacher,
+      message: "Teacher  updated Successfully",
+    });
+  }
 });
