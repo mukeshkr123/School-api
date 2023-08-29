@@ -1,4 +1,4 @@
-const AysncHandler = require("express-async-handler");
+const AsyncHandler = require("express-async-handler");
 const Teacher = require("../../model/Academic/Teacher");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
 const generateToken = require("../../utils/generateToken");
@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 //@route POST /api/teachers/admin/register
 //@acess  Private
 
-exports.adminRegisterTeacher = AysncHandler(async (req, res) => {
+exports.adminRegisterTeacher = AsyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
   //check if teacher already exists
   const teacher = await Teacher.findOne({ email });
@@ -35,7 +35,7 @@ exports.adminRegisterTeacher = AysncHandler(async (req, res) => {
 //@route POST /api/teachers/login
 //@acess  Private
 
-exports.loginTeacher = AysncHandler(async (req, res) => {
+exports.loginTeacher = AsyncHandler(async (req, res) => {
   const { email, password } = req.body;
   // find the uset
   const teacher = await Teacher.findOne({ email });
@@ -59,7 +59,7 @@ exports.loginTeacher = AysncHandler(async (req, res) => {
 //@route POST /api/admins/teachers
 //@acess  Private // admin only
 
-exports.getAllTechersAdmin = AysncHandler(async (req, res) => {
+exports.getAllTechersAdmin = AsyncHandler(async (req, res) => {
   const teachers = await Teacher.find();
   res.status(200).json({
     status: "status",
@@ -71,7 +71,7 @@ exports.getAllTechersAdmin = AysncHandler(async (req, res) => {
 //@route POST /api/teachers/:techerId/admin
 //@acess  Private // admin only
 
-exports.getTecherByAdmin = AysncHandler(async (req, res) => {
+exports.getTecherByAdmin = AsyncHandler(async (req, res) => {
   const { teacherID } = req.params;
   //find the teacher
   const teacher = await Teacher.findById(teacherID);
@@ -89,7 +89,7 @@ exports.getTecherByAdmin = AysncHandler(async (req, res) => {
 //@route POST /api/teachers/profile
 //@acess  Private // admin only
 
-exports.getTeacherProfile = AysncHandler(async (req, res) => {
+exports.getTeacherProfile = AsyncHandler(async (req, res) => {
   const teacher = await Teacher.findById(req.userAuth?._id).select(
     "-password, -updatedAt"
   );
@@ -108,7 +108,7 @@ exports.getTeacherProfile = AysncHandler(async (req, res) => {
 //@route POST /api/teachers/:/teacherIDupdate
 //@acess  Private // admin only
 
-exports.teacherUpdateProfike = AysncHandler(async (req, res) => {
+exports.teacherUpdateProfike = AsyncHandler(async (req, res) => {
   const { email, name, password } = req.body;
   // find the teacher
   // if email is taken
@@ -137,6 +137,51 @@ exports.teacherUpdateProfike = AysncHandler(async (req, res) => {
       status: "success",
       data: teacher,
       message: "Teacher  updated Successfully",
+    });
+  }
+});
+
+//@desc  Admin updating teacher profile
+//@route POST /api/teachers/:teacherID/admin
+//@acess  Private // admin only
+
+exports.adminUpdateTeacher = AsyncHandler(async (req, res) => {
+  const { program, classLevel, academicYear, subject } = req.body;
+  const teacherID = req.params.teacherID;
+
+  try {
+    const teacherFound = await Teacher.findById(teacherID);
+    if (!teacherFound) {
+      return res.status(404).json({
+        status: "error",
+        message: "Teacher not found",
+      });
+    }
+
+    if (teacherFound.isWithdrawn) {
+      return res.status(403).json({
+        status: "error",
+        message: "Action denied, teacher is withdrawn",
+      });
+    }
+
+    // Update attributes
+    if (program) teacherFound.program = program;
+    if (classLevel) teacherFound.classLevel = classLevel;
+    if (academicYear) teacherFound.academicYear = academicYear;
+    if (subject) teacherFound.subject = subject;
+
+    await teacherFound.save();
+
+    return res.status(200).json({
+      status: "success",
+      data: teacherFound,
+      message: "Teacher updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "An error occurred while updating the teacher",
     });
   }
 });

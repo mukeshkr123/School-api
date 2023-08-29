@@ -6,6 +6,7 @@ const {
   getTecherByAdmin,
   getTeacherProfile,
   teacherUpdateProfike,
+  adminUpdateTeacher,
 } = require("../../controller/staff/teacherCtrl");
 
 const isAdmin = require("../../middlewares/isAdmin");
@@ -37,6 +38,12 @@ teachersRouter.put(
   isTeacherLogin,
   isTeacher,
   teacherUpdateProfike
+);
+
+teachersRouter.put(
+  "/:teacherID/update/admin",
+  isAdminLogin,
+  adminUpdateTeacher
 );
 
 module.exports = teachersRouter;
