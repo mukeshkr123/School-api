@@ -76,15 +76,76 @@ exports.getExams = AsyncHandler(async (req, res) => {
     data: exams,
   });
 });
+
 //@desc     get single exams
 //@route    GEt /api/v1/exams/:id
 //@access   Private tecaher only
-
 exports.getExam = AsyncHandler(async (req, res) => {
   const exam = await Exam.findById(req.params.id);
   res.status(201).json({
     status: "success",
     message: "Feteched exam successfully",
     data: exam,
+  });
+});
+
+//@desc     update exam
+//@route    PUT /api/v1/exams/:id
+//@access   Private teacher only
+
+exports.updateExam = AsyncHandler(async (req, res) => {
+  const examId = req.params.id; // Extract the exam ID from the request parameters
+
+  const {
+    name,
+    description,
+    academicTerm,
+    academicYear,
+    classLevel,
+    duration,
+    examDate,
+    examStatus,
+    examTime,
+    examType,
+    subject,
+    program,
+  } = req.body;
+
+  // check if already exists
+  const nameExist = await Exam.findOne({ name });
+  if (nameExist) {
+    throw new Error("Name Exists");
+  }
+
+  const updatedExam = await Exam.findByIdAndUpdate(
+    examId,
+    {
+      name,
+      description,
+      academicTerm,
+      academicYear,
+      classLevel,
+      duration,
+      examDate,
+      examStatus,
+      examTime,
+      examType,
+      subject,
+      program,
+    },
+    {
+      new: true, // Return the updated document
+      runValidators: true, // Run validation on updates
+    }
+  );
+
+  if (!updatedExam) {
+    return res.status(404).json({ status: "error", message: "Exam not found" });
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Exam updated successfully",
+    data: updatedExam,
   });
 });
