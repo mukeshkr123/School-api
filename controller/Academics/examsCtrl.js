@@ -1,10 +1,10 @@
-//@desc     Create exam
-//@route    POST /api/v1/exams
-//@access   Private tecaher only
-
 const AsyncHandler = require("express-async-handler");
 const Teacher = require("../../model/Academic/Teacher");
 const Exam = require("../../model/Academic/Exam");
+
+//@desc     Create exam
+//@route    POST /api/v1/exams
+//@access   Private tecaher only
 
 exports.createExam = AsyncHandler(async (req, res) => {
   const {
@@ -61,5 +61,30 @@ exports.createExam = AsyncHandler(async (req, res) => {
     status: "success",
     message: "Exam created successfully",
     data: examCreated,
+  });
+});
+
+//@desc     get all exams
+//@route    GEt /api/v1/exams
+//@access   Private tecaher only
+
+exports.getExams = AsyncHandler(async (req, res) => {
+  const exams = await Exam.find();
+  res.status(201).json({
+    status: "success",
+    message: "Feteched exam successfully",
+    data: exams,
+  });
+});
+//@desc     get single exams
+//@route    GEt /api/v1/exams/:id
+//@access   Private tecaher only
+
+exports.getExam = AsyncHandler(async (req, res) => {
+  const exam = await Exam.findById(req.params.id);
+  res.status(201).json({
+    status: "success",
+    message: "Feteched exam successfully",
+    data: exam,
   });
 });

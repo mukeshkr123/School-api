@@ -1,11 +1,15 @@
 const express = require("express");
-const { createExam } = require("../../controller/Academics/examsCtrl");
-const isAdminLogin = require("../../middlewares/isAdminLoggedin");
+const {
+  createExam,
+  getExams,
+  getExam,
+} = require("../../controller/Academics/examsCtrl");
 const isTeacher = require("../../middlewares/isTeacher");
 const isTeacherLogin = require("../../middlewares/isTeacherLogin");
 
 const examRouter = express.Router();
 
-examRouter.route("/").post(isTeacherLogin, isTeacher, createExam);
+examRouter.route("/", isTeacherLogin, isTeacher).post(createExam).get(getExams);
+examRouter.get("/:id", isTeacherLogin, isTeacher, getExam);
 
 module.exports = examRouter;
