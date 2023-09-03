@@ -5,7 +5,7 @@ const isStudent = async (req, res, next) => {
   const userId = req?.userAuth?._id;
   const StudentFound = await Student.findById(userId);
   //check if
-  if (StudentFound?.role === "Student") {
+  if (StudentFound?.role === "student") {
     next();
     Student;
   } else {

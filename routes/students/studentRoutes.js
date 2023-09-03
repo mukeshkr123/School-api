@@ -5,7 +5,10 @@ const isAdminLogin = require("../../middlewares/isAdminLoggedin");
 const {
   adminRegisterStudent,
   loginStudent,
+  getStudentProfile,
 } = require("../../controller/students/studentsCtrl");
+const isStudentLogin = require("../../middlewares/isStudentLogin");
+const isStudent = require("../../middlewares/isStudent");
 
 const studentsRouter = express.Router();
 
@@ -16,5 +19,6 @@ studentsRouter.post(
   adminRegisterStudent
 );
 studentsRouter.post("/login", isAdminLogin, isAdmin, loginStudent);
+studentsRouter.get("/profile", isStudentLogin, getStudentProfile);
 
 module.exports = studentsRouter;

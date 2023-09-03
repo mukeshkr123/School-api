@@ -1,7 +1,6 @@
 const AsyncHandler = require("express-async-handler");
 const Student = require("../../model/Academic/Student");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
-const generateToken = require("../../utils/generateToken");
 
 //@desc  Admin Register Students
 //@route POST /api/students/admin/register
@@ -52,4 +51,22 @@ exports.loginStudent = AsyncHandler(async (req, res) => {
       data: generateToken(student?._id),
     });
   }
+});
+
+//@desc  Admin get students
+//@route POST /api/students/profile
+//@acess  Private // students only
+
+exports.getStudentProfile = AsyncHandler(async (req, res) => {
+  const student = await Student.findById(req.userAuth?._id).select(
+    "-password, -updatedAt"
+  );
+  if (!student) {
+    throw new Error("student not found");
+  }
+  res.status(200).json({
+    status: "status",
+    message: "students Fetched successfully",
+    data: student,
+  });
 });
