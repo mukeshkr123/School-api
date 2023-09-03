@@ -1,6 +1,7 @@
 const AsyncHandler = require("express-async-handler");
 const Student = require("../../model/Academic/Student");
 const { hashPassword, isPassMatched } = require("../../utils/helpers");
+const bcrypt = require("bcryptjs");
 
 //@desc  Admin Register Students
 //@route POST /api/students/admin/register
@@ -100,4 +101,41 @@ exports.getStudentsByAdmin = AsyncHandler(async (req, res) => {
     message: "students Fetched successfully",
     data: student,
   });
+});
+
+//@desc  update studen
+//@route POST /api/students/:studentID/update
+//@acess  Private // student only
+
+exports.studentUpdateProfile = AsyncHandler(async (req, res) => {
+  const { email, name, password } = req.body;
+  // find the student
+  // if email is taken
+  const emailExist = await Student.findOne({ email });
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password
+  const passwordHashed = await bcrypt.hash(password, salt);
+  if (emailExist) {
+    throw new Error("This is taken/exist");
+  } else {
+    //update
+    const student = await Student.findByIdAndUpdate(
+      req.userAuth._id,
+      {
+        email,
+        password: passwordHashed,
+        name,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(200).json({
+      status: "success",
+      data: student,
+      message: "student  updated Successfully",
+    });
+  }
 });
