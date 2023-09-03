@@ -67,6 +67,7 @@ exports.getAllTechersAdmin = AsyncHandler(async (req, res) => {
     data: teachers,
   });
 });
+
 //@desc  Admin get Teacher
 //@route POST /api/teachers/:techerId/admin
 //@acess  Private // admin only

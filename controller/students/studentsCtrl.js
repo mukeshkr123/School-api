@@ -83,3 +83,21 @@ exports.getAllStudentsAdmin = AsyncHandler(async (req, res) => {
     data: students,
   });
 });
+
+//@desc  Admin get Student
+//@route POST /api/student/:studentId/admin
+//@acess  Private // admin only
+
+exports.getStudentsByAdmin = AsyncHandler(async (req, res) => {
+  const { studentID } = req.params;
+  //find the student
+  const student = await Student.findById(studentID);
+  if (!student) {
+    throw new Error("student not found");
+  }
+  res.status(200).json({
+    status: "status",
+    message: "students Fetched successfully",
+    data: student,
+  });
+});
