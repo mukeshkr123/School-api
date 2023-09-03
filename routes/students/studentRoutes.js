@@ -15,6 +15,6 @@ studentsRouter.post(
   isAdmin,
   adminRegisterStudent
 );
-studentsRouter.post("/admin/login", isAdminLogin, isAdmin, loginStudent);
+studentsRouter.post("/login", isAdminLogin, isAdmin, loginStudent);
 
 module.exports = studentsRouter;
