@@ -5,7 +5,6 @@ const {
   notFoundErr,
   globalErrHandler,
 } = require("../middlewares/globalErrorHandler");
-const adminRouter = require("../routes/staffs/adminRouter");
 const academicYearRouter = require("../routes/academics/academicYearRouter");
 const academicTermRouter = require("../routes/academics/academicTermRouter ");
 const classLevelRouter = require("../routes/academics/classLevelRouter");
@@ -14,9 +13,10 @@ const subjectRouter = require("../routes/academics/subjectRoute");
 const yearGroupRouter = require("../routes/academics/yearGroupRoute");
 const teacherRouter = require("../routes/staffs/teachesRoute");
 const examRouter = require("../routes/academics/examRoute");
+const adminRouter = require("../routes/staffs/adminRoute");
+const studentsRouter = require("../routes/students/studentRoutes");
 
 const app = express();
-
 //Middlewares
 app.use(express.json()); //pass incoming json data
 //cors
@@ -32,6 +32,7 @@ app.use("/api/v1/subjects", subjectRouter);
 app.use("/api/v1/year-groups", yearGroupRouter);
 app.use("/api/v1/teachers", teacherRouter);
 app.use("/api/v1/exams", examRouter);
+app.use("/api/v1/students", studentsRouter);
 
 //Error middlewares
 app.use(notFoundErr);
