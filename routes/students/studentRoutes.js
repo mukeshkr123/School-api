@@ -9,6 +9,7 @@ const {
   getAllStudentsAdmin,
   getStudentsByAdmin,
   studentUpdateProfile,
+  adminUpdateStudent,
 } = require("../../controller/students/studentsCtrl");
 const isStudentLogin = require("../../middlewares/isStudentLogin");
 const isStudent = require("../../middlewares/isStudent");
@@ -36,11 +37,19 @@ studentsRouter.get(
   isAdmin,
   getStudentsByAdmin
 );
+
 studentsRouter.put(
   "/:studentID/update",
   isStudentLogin,
   isStudent,
   studentUpdateProfile
+);
+
+studentsRouter.put(
+  "/:studentID/update/admin",
+  isAdminLogin,
+  isAdmin,
+  adminUpdateStudent
 );
 
 module.exports = studentsRouter;

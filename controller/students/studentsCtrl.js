@@ -139,3 +139,42 @@ exports.studentUpdateProfile = AsyncHandler(async (req, res) => {
     });
   }
 });
+
+//@desc  admin updating studensts assignine classess
+//@route POST /api/students/:studentID/update/admin
+//@acess  Private admin only
+
+exports.adminUpdateStudent = AsyncHandler(async (req, res) => {
+  const { classLevels, academicYear, program, name, email, prefectName } =
+    req.body;
+  // find the student by id
+  const studenFound = await Student.findById(req.params.studentID);
+  if (!studenFound) {
+    throw new Error("Student not found ");
+  }
+  //update
+  const studenUpdated = await Student.findByIdAndUpdate(
+    req.params.studentID,
+    {
+      $set: {
+        name,
+        email,
+        academicYear,
+        program,
+        prefectName,
+      },
+      $addToSet: {
+        classLevels,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  // send the response
+  res.status(200).json({
+    status: "success",
+    data: studenUpdated,
+    message: " Student updated Successfully",
+  });
+});
