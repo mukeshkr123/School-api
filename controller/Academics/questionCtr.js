@@ -50,7 +50,7 @@ exports.CreateQuestion = AsyncHandler(async (req, res) => {
 });
 
 //@desc  Get all questions
-//@route POST /api/v1/questions
+//@route Get /api/v1/questions
 //@acess  Private Teacher only
 
 exports.GetAllQuestions = AsyncHandler(async (req, res) => {
@@ -63,7 +63,7 @@ exports.GetAllQuestions = AsyncHandler(async (req, res) => {
 });
 
 //@desc  Get a questions
-//@route POST /api/v1/questions/:id
+//@route Get /api/v1/questions/:id
 //@acess  Private Teacher only
 
 exports.GetSingleQuestion = AsyncHandler(async (req, res) => {
@@ -72,5 +72,41 @@ exports.GetSingleQuestion = AsyncHandler(async (req, res) => {
     status: "success",
     message: "Question fetched successfully",
     data: question,
+  });
+});
+
+//@desc  update a questions
+//@route PUT /api/v1/questions/:id
+//@acess  Private Teacher only
+
+exports.UpdateQuestion = AsyncHandler(async (req, res) => {
+  const { question, optionA, optionB, optionC, optionD, correctAnswer } =
+    req.body;
+
+  //check question exists or not
+  const questionFound = await Question.findOne({ question });
+  if (questionFound) {
+    throw new Error("Question exists");
+  }
+
+  const questionUpdated = await Question.findByIdAndUpdate(
+    req.params.id,
+    {
+      question,
+      optionA,
+      optionB,
+      optionC,
+      optionD,
+      createdBy: req.userAuth.id,
+    },
+    {
+      new: true,
+    }
+  );
+
+  res.status(201).json({
+    status: "success",
+    message: "Question updated successfully",
+    data: questionUpdated,
   });
 });
