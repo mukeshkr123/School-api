@@ -22,6 +22,11 @@ exports.CreateQuestion = expressAsyncHandler(async (req, res) => {
   if (!examFound) {
     throw new Error("Exam not found");
   }
+  //check if question exist;
+  const questionExist = await Question.findOne({ question });
+  if (questionExist) {
+    throw new Error("Question already exist");
+  }
   //create exam
   const questionCreated = await Question.create({
     question,
