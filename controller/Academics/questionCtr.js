@@ -1,12 +1,12 @@
-const expressAsyncHandler = require("express-async-handler");
+const AsyncHandler = require("express-async-handler");
 const Exam = require("../../model/Academic/Exam");
 const Question = require("../../model/Academic/Questions");
 
 //@desc  Create Question
-//@route POST /api/v1/question/:examID
+//@route POST /api/v1/questions/:examID
 //@acess  Private Teacher only
 
-exports.CreateQuestion = expressAsyncHandler(async (req, res) => {
+exports.CreateQuestion = AsyncHandler(async (req, res) => {
   const {
     question,
     optionA,
@@ -46,5 +46,18 @@ exports.CreateQuestion = expressAsyncHandler(async (req, res) => {
     status: "success",
     message: "Question created successfully",
     data: questionCreated,
+  });
+});
+
+//@desc  Get all questions
+//@route POST /api/v1/questions
+//@acess  Private Teacher only
+
+exports.GetAllQuestions = AsyncHandler(async (req, res) => {
+  const questions = await Question.find();
+  res.status(201).json({
+    status: "success",
+    message: "Questions fetched successfully",
+    data: questions,
   });
 });
