@@ -61,3 +61,16 @@ exports.GetAllQuestions = AsyncHandler(async (req, res) => {
     data: questions,
   });
 });
+
+//@desc  Get a questions
+//@route POST /api/v1/questions/:id
+//@acess  Private Teacher only
+
+exports.GetSingleQuestion = AsyncHandler(async (req, res) => {
+  const question = await Question.findById(req.params.id);
+  res.status(201).json({
+    status: "success",
+    message: "Question fetched successfully",
+    data: question,
+  });
+});
