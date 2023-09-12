@@ -69,7 +69,12 @@ exports.createExam = AsyncHandler(async (req, res) => {
 //@access   Private tecaher only
 
 exports.getExams = AsyncHandler(async (req, res) => {
-  const exams = await Exam.find();
+  const exams = await Exam.find().populate({
+    path: "questions",
+    populate: {
+      path: "createdBy",
+    },
+  });
   res.status(201).json({
     status: "success",
     message: "Feteched exam successfully",
